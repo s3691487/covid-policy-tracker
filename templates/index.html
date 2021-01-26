@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='test.css') }}">
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.7.2/angular-translate.js'></script><script  src="static/script.js"></script>
+        <script  src="static/countries.js" ></script>
+        <script src="static/covidStats.js"></script>
+        <script src="static/policies.js"></script>
+        <script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            var countryDataApiEndpoint = 'https://xk4w3gnxqb.execute-api.ap-southeast-2.amazonaws.com/beta_0_0/allcountrylocations'
+            async function main() { 
+            var result = await getDistinctCountry('https://xk4w3gnxqb.execute-api.ap-southeast-2.amazonaws.com/beta_0_0/distinctcountry'); 
+            
+        
+            await Object.keys(result).forEach(key => {
+            
+           
+            var newElement = document.createElement('option');
+            newElement.value = result[key];
+            newElement.innerHTML = result[key];
+            document.getElementById("dropdown").appendChild(newElement);
+             if (result[key].toLowerCase().localeCompare('australia') == 0){
+              console.log("key "+ key+" result "+result[key]);
+            document.getElementById("dropdown").options[key].selected = true;
+            var newImage = document.createElement('div');
+             newElement.appendChild(newImage).innerText = String.fromCodePoint(127462,127482)
+            }
+            else if(result[key].toLowerCase().localeCompare('china') == 0) {
+              var newImage = document.createElement('div');
+              newElement.appendChild(newImage).innerText = String.fromCodePoint(127464,127475)
+            }
+            else{
+              var newImage = document.createElement('div');
+              newElement.appendChild(newImage).innerText = String.fromCodePoint(127468,127463)
+            }
+            
+          });
+            await getDefaultPolicy('https://q2ua1gzvsj.execute-api.ap-southeast-2.amazonaws.com/beta_0_0/getdefaultpolicy');
+            var heading = document.getElementById('policies')
+            var heading_text = heading.childNodes[0]
+            heading_text.nodeValue = 'Key Policies in Australia Year 2020'
+          
+            var selectBox = document.getElementById("dropdown");
+            var country = selectBox.options[selectBox.selectedIndex].value;
+            
+            date = getCurrentDate()  
+            await getCovidStats('https://cxfqobcqe8.execute-api.ap-southeast-2.amazonaws.com/dep_1/getCovidCases?country_name='+country+'&date=2020-12-01')  
+            
+            
+        }
+        window.onresize = doALoadOfStuff;
+
+
+            function doALoadOfStuff() {
+                google.charts.load('current', {packages: ['corechart','bar']});
+                var selectBox = document.getElementById("dropdown");
+                var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                currentMonth = getCurrentMonthYear()
+                google.setOnLoadCallback(function(){drawChart('https://q2ua1gzvsj.execute-api.ap-southeast-2.amazonaws.com/beta_0_0/getmonthlypolicy?country_name='+selectedValue+'&month='+currentMonth)})
+            }
+        
+            main();
+          </script>
+    </head>
+<body>
+  
+    <div class="wrapper">
+
+        <header>
+            <div class="web-title"><h1> COVID-19 Policy Tracker </h1></div>
+            <select class="dropdown" id="dropdown" onchange="getPolicy()">
+            </select>
+            <button class="generate-chart-button" onclick="doALoadOfStuff()">Generate New Chart</button>
+        </header>
+            
+    <section class="columns">
+        
+        <div class="column">
+            <div ng-app="app">
+                <div ng-controller="MainController">
+                    <div class="wrapp">
+                        <flex-calendar options="options" events="events">
+                        </flex-calendar>
+                    </div>
+                <br />
+                </div>
+            </div>
+        </div>
+        
+        <div class="column">
+            <div class="covid-statics">
+                <div id ="covid-stats-heading"><h3>COVID-19 Statistics:</h3></div>
+                <div id ="covid-stats"></div>
+            </div>
+        </div>
+      
+       <div class="column">
+        <div id ="covid-stats-heading"><h3>COVID-19 affected region in Australia, China And UK:</h3></div>
+            <div class="column-third">
+                <iframe src="/maps" height="80%" width="100%"></iframe>
+            </div>
+        </div>
+        
+    </section>	
+        
+        <footer>
+            <div id="chart"></div>
+            <div id = "policies">Policies
+            <div >
+            <p id = "innerPolicy"></p>
+            </div>
+            </div>
+
+        </footer>
+    
+    </div>
+</body>
+</html>
