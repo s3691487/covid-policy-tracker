@@ -17,10 +17,12 @@ header {
 }
 
 .columns {
+  overflow: hidden;
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
 	margin: 5px 0;
+	background-color: #fff;
 }
 
 .column {
@@ -90,8 +92,8 @@ body {
       color: #444;
       line-height: 1.3;
       padding: .6em 1.4em .5em .8em;
-      width: 20%;
-      max-width: 20%;
+      /*width: 20%;*/
+      /*max-width: 20%;*/
       box-sizing: border-box; 
     margin-right: 20%;
     margin-bottom: 3%;

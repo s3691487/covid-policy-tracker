@@ -25,7 +25,7 @@ var selectedValue = selectBox.options[selectBox.selectedIndex].value;
     heading_text.nodeValue = "Key Policies in "+selectedValue+" on year/month "+getCurrentMonthYear()
 
       Object.keys(response).reverse().forEach(key => {
-
+        
           if(response[key]['stay_at_home_requirements_notes']!=null || response[key]['restrictions_on_gatherings_notes']!=null||
           response[key]['international_travel_controls_notes']!=null || response[key]['workplace_closing_notes']!=null ||
           response[key]['cancel_public_events_notes']!=null || response[key]['school_closing_notes']!=null ){
@@ -54,6 +54,19 @@ var selectedValue = selectBox.options[selectBox.selectedIndex].value;
                 if(newElement.innerHTML!==''){
                     document.getElementById("innerPolicy").appendChild(newElement);
                 }
+          }
+
+          if(response[key]['stay_at_home_requirements_notes']==null && response[key]['restrictions_on_gatherings_notes']==null&&
+          response[key]['international_travel_controls_notes']==null && response[key]['workplace_closing_notes']==null &&
+          response[key]['cancel_public_events_notes']==null && response[key]['school_closing_notes']==null )
+          {
+
+            var newElement = document.createElement('details');
+            newElement.className = 'square-container'
+            newElement.innerHTML = '<summary>['+  getCurrentDate() + ']</summary>';
+            newElement.innerHTML += '<p>' +' No New Policy Update' + '</p>'
+            document.getElementById("innerPolicy").appendChild(newElement);
+
           }
      
         

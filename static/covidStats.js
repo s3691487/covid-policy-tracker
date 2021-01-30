@@ -6,7 +6,7 @@ async function getCovidStats(covidStatsEndpoint) {
         url: covidApi,
         type: 'GET',
         success: function (data){
-            console.log(data)
+            
             updateCovidResult(data);
         },
         error: function (response) {
@@ -23,11 +23,22 @@ async function getCovidStats(covidStatsEndpoint) {
 
 function updateCovidResult(data) { 
     const myNode = document.getElementById("covid-stats").innerHTML= ""
-    var newElement = document.createElement('h3');
+    var newElement = document.createElement('div');
+    if(data['date'] === undefined){
+        newElement.innerHTML = 
+        '<h3>Date: <span>' + getCurrentDate() + "</span></h3>" +
+        '<h3>Confirmed cases: <span> ' + "Lucky Us, No Confirmed Cases" + "</span></h3>" +
+        '<h3>Active cases: <span>' + "Neither any Active Cases" + "</span></h3>" +
+        '<h3>Death toll: <span>' + "No Deaths, God Bless us All" + "</span></h3>" ;
+        // console.log(data['confirmed'])
+
+    }
+    else{
     newElement.innerHTML = 
-    'Date: ' + data['date'] + "<br>" +
-    'Confirmed cases: ' + data['confirmed'] + "<br>" +
-    'Active cases: ' + data['active']  + "<br>" +
-    'Death toll: ' + data['deaths']  + "<br>" ;
+    "<h3>Date: <span>"+data['date']+"</span></h3>"+
+    "<h3>Confirmed cases:  <span>"+data['confirmed']+"</span></h3>"+
+    "<h3>Active cases: <span>"+data['active']  +"</span></h3>"+
+    "<h3>Death toll: <span>"+data['deaths'] +"</span></h3>";
+    }
     document.getElementById("covid-stats").appendChild(newElement);
 }
