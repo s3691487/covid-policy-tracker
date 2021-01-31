@@ -13,15 +13,15 @@ project_id = "s3691487-cc2021"
 credentials = service_account.Credentials.from_service_account_info(
     {
         "type": "service_account",
-        "project_id": "<project_id>",
-        "private_key_id": "<private_key_id>",
-        "private_key": "-----BEGIN PRIVATE KEY-----\n<private_key>\n-----END PRIVATE KEY-----\n",
-        "client_email": "<client_email>",
-        "client_id": "<client_id>",
-        "auth_uri": "<auth_uri>",
-        "token_uri": "<token_uri>",
-        "auth_provider_x509_cert_url": "<auth_provider_x509_cert_url>",
-        "client_x509_cert_url": "<client_x509_cert_url>"
+        "project_id": "YOUR_PROJECT_ID",
+        "private_key_id": "YOUR_PriVATe_KEY_ID",
+        "private_key": "YOUR_PRIVATE_KEY",
+        "client_email": "YOUR_CLIENT_EMAIL",
+        "client_id": "YOUR_CLIENT_ID",
+        "auth_uri": "YOUR AUTH",
+        "token_uri": "YOUR TOKEN",
+        "auth_provider_x509_cert_url": "YOUR CERTS URL",
+        "client_x509_cert_url": "LIENT CERT URL"
     },)
 
 yesterday = (datetime.now() - timedelta(1)).strftime("%Y-%m-%d")
@@ -34,6 +34,8 @@ def define_data_type(dataframe):
 
 def define_country_data_type(df):
     df['date'] = df['date'].dt.strftime("%Y-%m-%d")
+    df['latitude'] = df['latitude'].astype(str)
+    df['longitude'] = df['longitude'].astype(str)
     df['confirmed'] = df['confirmed'].fillna(0.0).astype(int)
     df['deaths'] = df['deaths'].fillna(0.0).astype(int)
     df['active'] = df['active'].fillna(0.0).astype(int)
@@ -65,79 +67,59 @@ def query_policy_for_current_date():
 
 def query_country_data():
     query = """
-        SELECT country_region, date, sum(confirmed) as confirmed, sum(deaths) as deaths, sum(active) as active 
-        FROM `bigquery-public-data.covid19_jhu_csse.summary` 
-        where (country_region like 'Australia' or country_region like 'China' or country_region like 'United Kingdom') and 
-        date between '2020-01-01' and '%s' group by country_region, date order by date asc
-    """%yesterday
+        SELECT province_state, country_region, date, latitude, longitude, location_geom, confirmed, deaths, active FROM 
+        `bigquery-public-data.covid19_jhu_csse.summary` where (country_region like 'Australia' 
+        or country_region like 'China' or country_region like 'United Kingdom') order by date asc
+    """
     df = pd.read_gbq(query, dialect='standard', project_id=project_id, credentials=credentials)
-    define_country_data_type(df)
     return df
 
 def query_yesterday_country_data():
     query = """
-        SELECT country_region, date, sum(confirmed) as confirmed, sum(deaths) as deaths, sum(active) as active 
-        FROM `bigquery-public-data.covid19_jhu_csse.summary` 
-        where (country_region like 'Austral:qia' or country_region like 'China' or country_region like 'United Kingdom') and 
-        date = '%s' group by country_region, date
-    """%yesterday
-    df = pd.read_gbq(query, dialect='standard', project_id=project_id, credentials=credentials)
-    define_country_data_type(df)
-    return df
-
-def query_geo_data():
-    query = """
-        SELECT max(province_state) as province_state, country_region, latitude, longitude FROM `bigquery-public-data.covid19_jhu_csse_eu.summary` 
-        where (country_region like 'Australia' or country_region like 'China' or country_region like 'United Kingdom') and province_state is not null 
-        group by country_region, latitude, longitude order by country_region asc
+        SELECT province_state, country_region, date, latitude, longitude, location_geom, confirmed, deaths, active FROM 
+        `bigquery-public-data.covid19_jhu_csse.summary` where (country_region like 'Australia' 
+        or country_region like 'China' or country_region like 'United Kingdom') order by date asc
     """
     df = pd.read_gbq(query, dialect='standard', project_id=project_id, credentials=credentials)
-    df['latitude'] = df['latitude'].astype(str)
-    df['longitude'] = df['longitude'].astype(str)
     return df
 
-
-def load_daily_data_to_table(dataframe, dynamodb=None):
+def load_data_to_table(dataframe, dynamodb=None):
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', aws_access_key_id='<aws_access_key_id>', aws_secret_access_key='<aws_secret_access_key>',region_name='ap-southeast-2')
+        dynamodb = boto3.resource('dynamodb', aws_access_key_id='AKIA3XOJ3BFU4PZWW3NA', aws_secret_access_key='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',region_name='ap-southeast-2')
 
     table_policy = dynamodb.Table('covid-policy')
     policy_data = dataframe.T.to_dict().values()
     for policy in policy_data:
         table_policy.put_item(Item=policy)
 
-    table_country = dynamodb.Table('covid_cases')
+    table_country = dynamodb.Table('country')
     country_data = query_yesterday_country_data().T.to_dict().values()
     for country in country_data:
         table_country.put_item(Item=country)
 
 
 def load_historical_country_data(dynamodb=None):
-
+    dataframe = query_country_data()
     if not dynamodb:
-        dynamodb = boto3.resource('dynamodb', aws_access_key_id='<aws_access_key_id>', aws_secret_access_key='<aws_secret_access_key>' ,region_name='ap-southeast-2')
-    table = dynamodb.Table('covid-cases')
-    covid_cases_data = query_country_data().T.to_dict().values()
-    for country in covid_cases_data:
+        dynamodb = boto3.resource('dynamodb', aws_access_key_id='AKIA3XOJ3BFU4PZWW3NA', aws_secret_access_key='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',region_name='ap-southeast-2')
+    define_country_data_type(dataframe)
+    print(dataframe.dtypes)
+    table = dynamodb.Table('country')
+    data = dataframe.T.to_dict().values()
+    for country in data:
         table.put_item(Item=country)
-
-    table = dynamodb.Table('country-location')
-    location_data = query_geo_data().T.to_dict().values()
-    for location in location_data:
-        table.put_item(Item=location)
 
 
 def load_historical_data_to_db():
     df = query_historical_policy()
-    load_daily_data_to_table(df)
-    load_historical_country_data()
+    load_data_to_table(df)
 
-
-def load_daily_data_to_db():
+def load_today_data_to_db():
     df = query_policy_for_current_date()
-    load_daily_data_to_table(df)
+    load_data_to_table(df)
 
 
 if __name__ == '__main__':
     # load_historical_data_to_db()
-    load_daily_data_to_db()
+    load_historical_country_data()
+    # load_today_data_to_db()

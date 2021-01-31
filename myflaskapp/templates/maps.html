@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Marker Clustering</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+    
+    <script src"static/maps.js"></script>
+    <script>
+    var locations = JSON.parse('{{ location | tojson | safe}}')
+    function renameKey ( obj, oldKey, newKey ) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    }
+
+   
+const arr = locations;
+arr.forEach( obj => renameKey( obj, 'longitude', 'lng' ) );
+arr.forEach( obj => renameKey( obj, 'latitude', 'lat' ) );
+const updatedJson = JSON.stringify( arr );
+
+console.log( updatedJson );
+    console.log(locations)
+  </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=SomeAPIKEY&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+    
+    <style type="text/css">
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script defer>
+     
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 2,
+          center: { lat: 30.789, lng: 33.790 },
+        });
+        // Create an array of alphabetical characters used to label the markers.
+        const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        const markers = locations.map((location, i) => {
+          return new google.maps.Marker({
+            position: location,
+            label: labels[i % labels.length],
+          });
+        });
+        // Add a marker clusterer to manage the markers.
+        new MarkerClusterer(map, markers, {
+          imagePath:
+            "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+        });
+      }
+ 
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
