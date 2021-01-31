@@ -62,12 +62,12 @@ $ python application.py
 ```
 
 ### To run the application on server
--initialize elastic beanstal using below command
+-initialise elastic beanstalk using below command
   - To know more Navigate to https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-flask.html
 - Deploy the application on elastic beanstalk
 
 ```
 $ eb deploy
 ```
-
+- Run the URL on ELASTIC beanstalk environment dashboard
 
