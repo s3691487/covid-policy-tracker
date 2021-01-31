@@ -12,5 +12,36 @@ While this virus has infected nearly a hundred people and claimed over 2 million
 We would like to point out, in this project, the policy data we used is sourced from the Oxford Coronavirus Government Response Tracker (OxCGRT).The Oxford COVID-19 Government Response Tracker (OxCGRT) systematically tracks and records information on different common policy responses that the governments had implemented to response to the pandemic on 18 indicators such as school closures and travel restrictions. We have selected 3 data sets for our current project. (University of Oxford, 2020) The covid cases data we are sourced from the Johns Hopkins University's coronavirus dataset. (Johns Hopkins University of Medicine 2020) All data we sourced can be found  in the Google BigQuery public dataset.
 
 ## High Level Architecture
+![architecture](https://user-images.githubusercontent.com/55371863/106376056-a3b2d980-63e5-11eb-8565-ca46b6ce903c.png)
+
+## Developer Guide
+### To run the application in local host
+This guide assumed the developer to have basic knowlege of AWS and Github
+- (optional)Login Into EC2 Instance
+- Clone the git repository
+- Install python 3.6 on the choosen OS in AWS
+- Install virtual Environment
+```
+$ pip install virtualenv
+```
+- Create virtual Environment
+```
+$  virtualenv virt
+```
+- Activate virtual environment
+```
+$ virt/bin/activate
+```
+- _Now Install All the required Dependencies for the Project
+- Install Flask
+```
+$ pip install flask
+```
+- Run the application on localhost
+```
+$ python application.py
+```
+### To run the application on server
+- Deply the application on elstic beanstalk
 
 
