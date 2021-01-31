@@ -3,7 +3,7 @@
 RMIT cloud computing 
 
 ### Designed and Developed by : Vaishali Wahi | Yanying Xu
-#### Appplication Link :[http://flask-env.eba-au6i98zk.ap-southeast-2.elasticbeanstalk.com
+#### Appplication Link :http://flask-env.eba-au6i98zk.ap-southeast-2.elasticbeanstalk.com
 
 ## Introduction
 As cited on the UpToDate website: ‘Coronaviruses are important human and animal pathogens. At the end of 2019, a novel coronavirus was identified as the cause of a cluster of pneumonia cases in Wuhan, a city in the Hubei Province of China. It rapidly spread, resulting in an epidemic throughout China, followed by a global pandemic. In February 2020, the World Health Organization designated the disease COVID-19, which stands for coronavirus disease 2019. The virus that causes COVID-19 is designated severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2); previously, it was referred to as 2019-nCoV’. (McIntosh 2020, para 1) 
@@ -19,7 +19,7 @@ We would like to point out, in this project, the policy data we used is sourced 
 
 
 - Login Into EC2 Instance
-  To install navigate to https://aws.amazon.com/getting-started/tutorials/deploy-code-vm/
+  - To install navigate to https://aws.amazon.com/getting-started/tutorials/deploy-code-vm/
 - Clone the git repository
 - Install python 3.6 on the choosen OS in AWS
   To install navigate to https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
