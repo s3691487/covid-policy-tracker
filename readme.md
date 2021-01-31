@@ -22,9 +22,9 @@ We would like to point out, in this project, the policy data we used is sourced 
   - To install navigate to https://aws.amazon.com/getting-started/tutorials/deploy-code-vm/
 - Clone the git repository
 - Install python 3.6 on the choosen OS in AWS
-  To install navigate to https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
+  - To install navigate to https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
 - Install pip
-  To install navigate to https://linuxize.com/post/how-to-install-pip-on-ubuntu-18.04/
+  - To install navigate to https://linuxize.com/post/how-to-install-pip-on-ubuntu-18.04/
 - Install virtual Environment
 ```
 $ pip install virtualenv
@@ -37,19 +37,23 @@ $  virtualenv virt
 ```
 $ virt/bin/activate
 ```
-- _Now Install All the required Dependencies for the Project
+#####Now Install All the required Dependencies for the Project
 - Install Flask
 ```
 $ pip install flask
 ```
 - To Fetch Data, create new lamda functions in AWS Lambda.(You can find the code in Lambda folder)
 - Create API Gateway to use the lambda functions 
+  - To know more visit https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-with-lambda-integration.html
+  - Create all the required Lamnda functions and connect them through API gateway using the above tutorial
 - Set Up Google cloud Project and enable Google Big Query
-  To Learn how navigate to https://cloud.google.com/resource-manager/docs/creating-managing-project
+  - To know more navigate to https://cloud.google.com/resource-manager/docs/creating-managing-project
 - Create a CRON Job in EC2 instance to fed the data in real Time
-  Set Up the following
-
-
+```
+$ crontab -e 
+$ MAILTO=""
+0**** python3/data-collect.py/dev/null
+```
 
 
 ### To run the application in local host
@@ -58,6 +62,12 @@ $ python application.py
 ```
 
 ### To run the application on server
-- Deply the application on elstic beanstalk
+-initialize elastic beanstal using below command
+  - To know more Navigate to https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-flask.html
+- Deploy the application on elastic beanstalk
+
+```
+$ eb deploy
+```
 
 
