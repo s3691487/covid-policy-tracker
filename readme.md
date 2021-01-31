@@ -16,11 +16,15 @@ We would like to point out, in this project, the policy data we used is sourced 
 ![architecture](https://user-images.githubusercontent.com/55371863/106376056-a3b2d980-63e5-11eb-8565-ca46b6ce903c.png)
 
 ## Developer Guide
-### To run the application in local host
-This guide assumed the developer to have basic knowlege of AWS and Github
-- (optional)Login Into EC2 Instance
+
+
+- Login Into EC2 Instance
+  To install navigate to https://aws.amazon.com/getting-started/tutorials/deploy-code-vm/
 - Clone the git repository
 - Install python 3.6 on the choosen OS in AWS
+  To install navigate to https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
+- Install pip
+  To install navigate to https://linuxize.com/post/how-to-install-pip-on-ubuntu-18.04/
 - Install virtual Environment
 ```
 $ pip install virtualenv
@@ -38,10 +42,21 @@ $ virt/bin/activate
 ```
 $ pip install flask
 ```
-- Run the application on localhost
+- To Fetch Data, create new lamda functions in AWS Lambda.(You can find the code in Lambda folder)
+- Create API Gateway to use the lambda functions 
+- Set Up Google cloud Project and enable Google Big Query
+  To Learn how navigate to https://cloud.google.com/resource-manager/docs/creating-managing-project
+- Create a CRON Job in EC2 instance to fed the data in real Time
+  Set Up the following
+
+
+
+
+### To run the application in local host
 ```
 $ python application.py
 ```
+
 ### To run the application on server
 - Deply the application on elstic beanstalk
 
